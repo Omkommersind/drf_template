@@ -6,8 +6,8 @@ from user_profiles.models import UserProfileModel
 class PostModel(BaseModel):
     user = models.ForeignKey(UserProfileModel, on_delete=models.CASCADE)
     text = models.TextField(default='Empty')
-    likes = models.ManyToManyField(UserProfileModel, related_name='post_likes')
-    dislikes = models.ManyToManyField(UserProfileModel, related_name='post_dislikes')
+    likes = models.ManyToManyField(UserProfileModel, blank=True, related_name='post_likes')
+    dislikes = models.ManyToManyField(UserProfileModel, blank=True, related_name='post_dislikes')
 
     class Meta:
         verbose_name = 'Post'
