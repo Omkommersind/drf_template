@@ -1,0 +1,35 @@
+from enum import IntEnum
+
+
+def choices(em):
+    return [(e.value, e.name) for e in em]
+
+
+class Errors(IntEnum):
+    NOT_AUTHORIZED = 401
+    BAD_REQUEST = 400
+    ACCESS_DENIED = 403
+    NOT_FOUND = 404
+
+    INTERNAL_SERVER_ERROR = 500
+    SLACK_INTERACTIONS_ERROR = 586
+
+
+class ClientErrors(IntEnum):
+    USER_NOT_FOUND = 1004
+    NOT_FINISHED_CONSULTATION_EXISTS = 577
+    PROFILE_EXISTS = 582
+    CREATE_MESSAGE_ERROR = 583
+    NOT_ENOUGH_POINTS = 584
+    SLACK_WORKSPACE_NOT_ALLOWED = 585
+
+
+class ConsoleMessageType(IntEnum):
+    REGISTER = 1
+    NEW_MESSAGE = 2
+    READ_MESSAGE = 3
+    SOCKET_DIALOG_MESSAGE = 4
+    SOCKET_NEW_MESSAGE = 5
+    SOCKET_SENDER_MESSAGE = 6
+    SOCKET_MESSAGE = 7
+    NOTIFICATION_MESSAGE = 8
