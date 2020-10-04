@@ -138,6 +138,8 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(hours=48),
 }
 
+DATE_INPUT_FORMATS = ['%Y-%m-%d']
+
 # if os.getenv('ENVIRONMENTS', Environment.LOCAL) == Environment.DEVELOP.value:
 #     from .environment.develop_settings import *
 # elif os.getenv('ENVIRONMENTS', Environment.LOCAL) == Environment.RELEASE.value:

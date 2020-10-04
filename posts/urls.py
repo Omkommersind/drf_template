@@ -7,4 +7,6 @@ urlpatterns = [
     path('api/posts/<int:post_id>', views.Post.as_view()),
     path('api/posts/<int:post_id>/like', views.LikePost.as_view()),
     path('api/posts/<int:post_id>/dislike', views.DislikePost.as_view()),
+
+    path('api/analytics/likes', views.LikesAnalytics.as_view()),
 ]

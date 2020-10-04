@@ -2,7 +2,7 @@ from django_globals import globals
 from rest_framework import serializers
 
 from posts.models import PostModel
-from posts.repositories import PostsRepository
+from posts.repositories import PostsRepository, PostReactionsRepository
 from user_profiles.serializers import UserSerializer
 
 
@@ -12,10 +12,10 @@ class PostSerializer(serializers.ModelSerializer):
     dislikes = serializers.SerializerMethodField()
 
     def get_likes(self, instance: PostModel):
-        return instance.likes.count()
+        return PostReactionsRepository().get_likes(instance)
 
     def get_dislikes(self, instance: PostModel):
-        return instance.dislikes.count()
+        return PostReactionsRepository().get_dislikes(instance)
 
     def create(self, validated_data):
         validated_data['user'] = globals.request.user

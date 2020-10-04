@@ -1,5 +1,11 @@
+from datetime import datetime, time
+
+from django.db.models import Q, Count
+from django.db.models.functions import TruncDate
+
 from backend.repositories import BaseRepository
-from posts.models import PostModel
+from posts.forms import DateSpanForm
+from posts.models import PostModel, PostReactionModel
 from user_profiles.models import UserProfileModel
 
 
@@ -9,22 +15,27 @@ class PostsRepository(BaseRepository):
     def __init__(self):
         super().__init__(self.model)
 
+
+class PostReactionsRepository(BaseRepository):
+    model = PostReactionModel
+
+    def __init__(self):
+        super().__init__(self.model)
+
+    def get_likes(self, post: PostModel):
+        return post.postreactionmodel_set.filter(is_like=True).count()
+
+    def get_dislikes(self, post: PostModel):
+        return post.postreactionmodel_set.filter(is_like=False).count()
+
     def like(self, post_id: int, user: UserProfileModel):
-        post: PostModel = self.get_by_id(post_id)
-
-        # Remove dislike if exists
-        if post.dislikes.filter(id=user.id).exists():
-            post.dislikes.remove(user)
-
-        post.likes.add(user)
-        return post
+        return PostReactionModel.objects.update_or_create({'post_id': post_id, 'user_id': user.id, 'is_like': True})
 
     def dislike(self, post_id: int, user: UserProfileModel):
-        post: PostModel = self.get_by_id(post_id)
+        return PostReactionModel.objects.update_or_create({'post_id': post_id, 'user_id': user.id, 'is_like': False})
 
-        # Remove like if exists
-        if post.likes.filter(id=user.id).exists():
-            post.likes.remove(user)
-
-        post.dislikes.add(user)
-        return post
+    def likes_analytics(self, form: DateSpanForm):
+        dt_from = datetime.combine(form.cleaned_data.get('date_from'), time.min)
+        dt_to = datetime.combine(form.cleaned_data.get('date_to'), time.max)
+        data = PostReactionModel.objects.filter(Q(updated_at__gte=dt_from) & Q(updated_at__lte=dt_to))
+        return data.annotate(day=TruncDate('updated_at')).values('day').annotate(c=Count('id')).values('day', 'c')
