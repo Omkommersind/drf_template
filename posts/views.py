@@ -23,6 +23,13 @@ class Post(ListCreateAPIView):
         return PostsRepository().get_all()
 
 
+class GetRandomPost(APIView):
+
+    def get(self, request):
+        post = PostReactionsRepository().get_random()
+        return Response(PostSerializer(post).data, status=status.HTTP_200_OK)
+
+
 class LikePost(APIView):
     permission_classes = (IsAuthenticated,)
 

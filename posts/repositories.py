@@ -1,4 +1,5 @@
 from datetime import datetime, time
+from random import randint
 
 from django.db.models import Q, Count
 from django.db.models.functions import TruncDate
@@ -39,3 +40,8 @@ class PostReactionsRepository(BaseRepository):
         dt_to = datetime.combine(form.cleaned_data.get('date_to'), time.max)
         data = PostReactionModel.objects.filter(Q(updated_at__gte=dt_from) & Q(updated_at__lte=dt_to))
         return data.annotate(day=TruncDate('updated_at')).values('day').annotate(c=Count('id')).values('day', 'c')
+
+    def get_random(self):
+        count = PostModel.objects.all().count()
+        random_index = randint(0, count - 1)
+        return PostModel.objects.all()[random_index]
