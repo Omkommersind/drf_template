@@ -30,10 +30,10 @@ class PostReactionsRepository(BaseRepository):
         return post.postreactionmodel_set.filter(is_like=False).count()
 
     def like(self, post_id: int, user: UserProfileModel):
-        return PostReactionModel.objects.update_or_create({'post_id': post_id, 'user_id': user.id, 'is_like': True})
+        return PostReactionModel.objects.update_or_create(**{'post_id': post_id, 'user_id': user.id, 'is_like': True})
 
     def dislike(self, post_id: int, user: UserProfileModel):
-        return PostReactionModel.objects.update_or_create({'post_id': post_id, 'user_id': user.id, 'is_like': False})
+        return PostReactionModel.objects.update_or_create(**{'post_id': post_id, 'user_id': user.id, 'is_like': False})
 
     def likes_analytics(self, form: DateSpanForm):
         dt_from = datetime.combine(form.cleaned_data.get('date_from'), time.min)
